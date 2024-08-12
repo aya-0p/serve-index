@@ -100,11 +100,7 @@ function serveIndex(root, options) {
 
   return function (req, res, next) {
     if (req.method !== 'GET' && req.method !== 'HEAD') {
-      res.statusCode = 'OPTIONS' === req.method ? 200 : 405;
-      res.setHeader('Allow', 'GET, HEAD, OPTIONS');
-      res.setHeader('Content-Length', '0');
-      res.end();
-      return;
+      return next();
     }
 
     // get dir
@@ -208,6 +204,7 @@ serveIndex.html = function _html(req, res, files, next, dir, showUp, icons, path
       render(locals, function (err, body) {
         if (err) return next(err);
         send(res, 'text/html', body)
+        next();
       });
     });
   });
@@ -231,6 +228,7 @@ serveIndex.json = function _json (req, res, files, next, dir, showUp, icons, pat
     }))
 
     send(res, 'application/json', body)
+    next()
   })
 };
 
@@ -252,6 +250,7 @@ serveIndex.plain = function _plain (req, res, files, next, dir, showUp, icons, p
     }).join('\n') + '\n'
 
     send(res, 'text/plain', body)
+    next()
   })
 };
 
